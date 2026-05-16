@@ -11,12 +11,15 @@ class GoalController extends Controller
     public function index()
     {
         $goals = Goal::where('user_id', Auth::id())
-            ->orderByRaw('(current_amount / target_amount) ASC')
             ->get()
             ->map(function ($g) {
                 $g->append(['progress', 'remaining']);
                 return $g;
-            });
+            })
+            ->sortBy(function ($g) {
+                return $g->target_amount > 0 ? $g->current_amount / $g->target_amount : 0;
+            })
+            ->values();
 
         return response()->json($goals);
     }

@@ -69,19 +69,16 @@ class FinancialSummaryService
     {
         $transactions = Transaction::where('user_id', $userId)
             ->whereYear('date', $year)
-            ->selectRaw("strftime('%m', date) as month, type, SUM(amount) as total")
-            ->groupBy('month', 'type')
+            ->select('date', 'type', 'amount')
             ->get();
 
         $months = [];
         for ($i = 1; $i <= 12; $i++) {
-            $monthKey = str_pad($i, 2, '0', STR_PAD_LEFT);
-            $income = $transactions->first(fn ($t) => $t->month === $monthKey && $t->type === 'income')?->total ?? 0;
-            $expense = $transactions->first(fn ($t) => $t->month === $monthKey && $t->type === 'expense')?->total ?? 0;
+            $monthTransactions = $transactions->filter(fn ($t) => (int) $t->date->format('m') === $i);
             $months[] = [
                 'month' => $i,
-                'income' => (float) $income,
-                'expense' => (float) $expense,
+                'income' => (float) $monthTransactions->where('type', 'income')->sum('amount'),
+                'expense' => (float) $monthTransactions->where('type', 'expense')->sum('amount'),
             ];
         }
 

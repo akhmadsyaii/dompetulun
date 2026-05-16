@@ -22,22 +22,24 @@ class PostgresConnector extends BasePostgresConnector
     protected function getDsn(array $config)
     {
         $host = $config['host'] ?? '';
-        if ($host && !filter_var($host, FILTER_VALIDATE_IP)) {
-            $ipv4 = $this->resolveIpv4($host);
-            if ($ipv4) {
-                $config['host'] = $ipv4;
+        if (str_contains($host, '.supabase.co')) {
+            preg_match('/db\.(.+?)\.supabase\.co/', $host, $m);
+            $ref = $m[1] ?? '';
+            $region = $config['supabase_region'] ?? 'ap-southeast-1';
+            if ($ref) {
+                $config['host'] = "aws-0-{$region}.pooler.supabase.com";
+                $config['port'] = '6543';
+                if (!str_contains($config['username'] ?? '', '.')) {
+                    $config['username'] = $config['username'] . '.' . $ref;
+                }
+            }
+        } elseif ($host && !filter_var($host, FILTER_VALIDATE_IP)) {
+            $records = dns_get_record($host, DNS_A);
+            if (!empty($records)) {
+                $config['host'] = $records[0]['ip'];
             }
         }
 
         return parent::getDsn($config);
-    }
-
-    private function resolveIpv4(string $host): ?string
-    {
-        $records = dns_get_record($host, DNS_A);
-        if (!empty($records)) {
-            return $records[0]['ip'];
-        }
-        return null;
     }
 }

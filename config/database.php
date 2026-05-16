@@ -98,6 +98,7 @@ return [
             'search_path' => 'public',
             'sslmode' => env('DB_SSLMODE', 'require'),
             'pgsql_options' => env('DB_PGSQL_OPTIONS'),
+            'supabase_region' => env('DB_SUPABASE_REGION', 'ap-southeast-1'),
             'options' => extension_loaded('pdo_pgsql') ? [
                 PDO::ATTR_TIMEOUT => 2,
             ] : [],

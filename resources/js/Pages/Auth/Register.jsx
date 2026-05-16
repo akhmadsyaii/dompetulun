@@ -1,5 +1,6 @@
-import { useForm, Link, Head } from '@inertiajs/react'
+import { useForm, Link } from '@inertiajs/react'
 import { motion, AnimatePresence } from 'framer-motion'
+import GuestLayout from '@/Layouts/GuestLayout'
 
 export default function Register() {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -17,8 +18,7 @@ export default function Register() {
     }
 
     return (
-        <>
-            <Head title="Register" />
+        <GuestLayout title="Register">
             <div className="w-full">
                 <h4 className="text-xl font-semibold text-text-heading dark:text-text-heading-dark mb-1 text-center">
                     Adventure starts here 🚀
@@ -127,6 +127,6 @@ export default function Register() {
                     <Link href="/login" className="text-primary hover:text-primary-dark font-semibold">Sign in instead</Link>
                 </p>
             </div>
-        </>
+        </GuestLayout>
     )
 }

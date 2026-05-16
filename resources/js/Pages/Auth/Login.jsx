@@ -1,5 +1,6 @@
-import { useForm, Link, Head } from '@inertiajs/react'
+import { useForm, Link } from '@inertiajs/react'
 import { motion, AnimatePresence } from 'framer-motion'
+import GuestLayout from '@/Layouts/GuestLayout'
 
 export default function Login() {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -16,8 +17,7 @@ export default function Login() {
     }
 
     return (
-        <>
-            <Head title="Login" />
+        <GuestLayout title="Login">
             <div className="w-full">
                 <h4 className="text-xl font-semibold text-text-heading dark:text-text-heading-dark mb-1 text-center">
                     Welcome to Dompetulun! 👋
@@ -111,6 +111,6 @@ export default function Login() {
                     <Link href="/register" className="text-primary hover:text-primary-dark font-semibold">Create an account</Link>
                 </p>
             </div>
-        </>
+        </GuestLayout>
     )
 }

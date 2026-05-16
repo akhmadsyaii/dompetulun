@@ -12,14 +12,6 @@ class PostgresConnector extends BasePostgresConnector
 
         $options = $config['pgsql_options'] ?? '';
 
-        if (empty($options)) {
-            $host = $config['host'] ?? '';
-            if ($host) {
-                $endpointId = explode('.', $host)[0];
-                $options = 'endpoint%3D' . $endpointId;
-            }
-        }
-
         if ($options) {
             $dsn .= ';options=' . $options;
         }

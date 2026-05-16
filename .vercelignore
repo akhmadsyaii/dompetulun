@@ -1,0 +1,12 @@
+.env
+.git
+.gitignore
+.gitattributes
+Dockerfile
+docker/
+fly.toml
+tests/
+database.sqlite
+*.md
+.phpunit*
+phpunit.xml

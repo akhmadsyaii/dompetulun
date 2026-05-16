@@ -1,0 +1,349 @@
+@import 'tailwindcss';
+
+@theme {
+    --font-sans: 'Public Sans', ui-sans-serif, system-ui, sans-serif;
+
+    --color-primary: #696cff;
+    --color-primary-dark: #4a4cdb;
+    --color-primary-light: #e7e7ff;
+    --color-primary-bg: rgba(105, 108, 255, 0.16);
+
+    --color-sidebar: #1e1e2a;
+    --color-sidebar-hover: rgba(255, 255, 255, 0.05);
+    --color-sidebar-active: rgba(105, 108, 255, 0.16);
+
+    --color-surface: #f5f5f9;
+    --color-surface-dark: #16162b;
+
+    --color-card: #ffffff;
+    --color-card-dark: #2b2b44;
+
+    --color-border: #d9dee3;
+    --color-border-dark: #3a3a4e;
+
+    --color-text: #566a7f;
+    --color-text-dark: #d4d4e8;
+    --color-text-heading: #384551;
+    --color-text-heading-dark: #e0e0f0;
+    --color-text-muted: #a1acb8;
+    --color-text-muted-dark: #6b6b80;
+
+    --color-income: #28c76f;
+    --color-expense: #ea5455;
+    --color-warning: #ff9f43;
+    --color-info: #00cfe8;
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: var(--color-primary) transparent;
+    }
+
+    body {
+        font-family: 'Public Sans', 'Inter', sans-serif;
+        background-color: var(--color-surface);
+        color: var(--color-text);
+        transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .dark body, .dark {
+        background-color: #16162b;
+        color: var(--color-text-dark);
+    }
+}
+
+@layer components {
+    /* === CARDS === */
+    .card-sneat {
+        background: var(--color-card);
+        border-radius: 0.375rem;
+        box-shadow: 0 2px 6px 0 rgba(67, 89, 113, 0.12);
+        transition: box-shadow 0.2s ease, transform 0.2s ease;
+    }
+    .card-sneat:hover {
+        box-shadow: 0 2px 12px rgba(67, 89, 113, 0.15);
+        transform: translateY(-2px);
+    }
+    .dark .card-sneat {
+        background: var(--color-card-dark);
+        box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.2);
+    }
+    .dark .card-sneat:hover {
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+        transform: translateY(-2px);
+    }
+
+    .card-accent-top {
+        position: relative;
+        overflow: hidden;
+    }
+    .card-accent-top::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        border-radius: 0.375rem 0.375rem 0 0;
+    }
+    .card-accent-top.accent-income::before { background: linear-gradient(90deg, #28c76f, #6ddb9a); }
+    .card-accent-top.accent-expense::before { background: linear-gradient(90deg, #ea5455, #f08a8b); }
+    .card-accent-top.accent-primary::before { background: linear-gradient(90deg, #696cff, #9b9dff); }
+    .card-accent-top.accent-warning::before { background: linear-gradient(90deg, #ff9f43, #ffbe76); }
+    .card-accent-top.accent-info::before { background: linear-gradient(90deg, #00cfe8, #5ddff0); }
+
+    /* === BUTTONS === */
+    .btn-primary-sneat {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        letter-spacing: 0.02em;
+        background: var(--color-primary);
+        color: white;
+        font-weight: 500;
+        font-size: 0.875rem;
+        padding: 0.4375rem 1.25rem;
+        border-radius: 0.375rem;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        border: none;
+        line-height: 1.5;
+    }
+    .btn-primary-sneat:hover {
+        background: var(--color-primary-dark);
+        box-shadow: 0 2px 4px rgba(105, 108, 255, 0.4);
+    }
+    .btn-primary-sneat:active { transform: scale(0.98); }
+    .btn-primary-sneat:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        box-shadow: none;
+        transform: none;
+    }
+
+    .btn-outline-sneat {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        background: transparent;
+        color: var(--color-text);
+        font-weight: 500;
+        font-size: 0.875rem;
+        padding: 0.4375rem 1.25rem;
+        border-radius: 0.375rem;
+        border: 1px solid var(--color-border);
+        transition: all 0.2s ease;
+        cursor: pointer;
+        line-height: 1.5;
+    }
+    .btn-outline-sneat:hover {
+        border-color: var(--color-primary);
+        color: var(--color-primary);
+        background: rgba(105, 108, 255, 0.05);
+    }
+
+    /* === FORMS === */
+    .form-control-sneat {
+        display: block;
+        width: 100%;
+        padding: 0.4375rem 0.875rem;
+        font-size: 0.875rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: var(--color-text);
+        background: var(--color-card);
+        border: 1px solid var(--color-border);
+        border-radius: 0.375rem;
+        outline: none;
+        transition: all 0.15s ease;
+    }
+    .form-control-sneat:focus {
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 0.1875rem rgba(105, 108, 255, 0.25);
+    }
+    .dark .form-control-sneat {
+        background: var(--color-card-dark);
+        border-color: var(--color-border-dark);
+        color: var(--color-text-dark);
+    }
+    .dark .form-control-sneat:focus {
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 0.1875rem rgba(105, 108, 255, 0.25);
+    }
+
+    .form-label-sneat {
+        font-size: 0.8125rem;
+        font-weight: 500;
+        color: var(--color-text-muted);
+        margin-bottom: 0.375rem;
+        display: block;
+    }
+    .dark .form-label-sneat {
+        color: var(--color-text-muted-dark);
+    }
+
+    .form-check-sneat {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        font-size: 0.875rem;
+        color: var(--color-text);
+    }
+    .form-check-sneat input[type="checkbox"] {
+        width: 1.125rem;
+        height: 1.125rem;
+        border-radius: 0.25rem;
+        border: 2px solid var(--color-border);
+        accent-color: var(--color-primary);
+        cursor: pointer;
+    }
+
+    /* === BADGES === */
+    .badge-income {
+        background: rgba(40, 199, 111, 0.12);
+        color: #28c76f;
+    }
+    .badge-expense {
+        background: rgba(234, 84, 85, 0.12);
+        color: #ea5455;
+    }
+    .badge-neutral {
+        background: rgba(161, 172, 184, 0.12);
+        color: #a1acb8;
+    }
+
+    /* === SIDEBAR === */
+    .sidebar-link {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.625rem 1rem;
+        margin: 0 0.5rem;
+        border-radius: 0.375rem;
+        font-size: 0.9rem;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 0.6);
+        transition: all 0.2s ease;
+        text-decoration: none;
+    }
+    .sidebar-link:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: #fff;
+    }
+    .sidebar-link.active {
+        background: rgba(105, 108, 255, 0.16);
+        color: var(--color-primary);
+    }
+
+    .sidebar-header {
+        padding: 0.375rem 1.5rem;
+        margin-top: 0.5rem;
+        margin-bottom: 0.25rem;
+        font-size: 0.65rem;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* === HEADER === */
+    .header-sneat {
+        background: rgba(255, 255, 255, 0.95);
+        border-bottom: 1px solid var(--color-border);
+    }
+    .dark .header-sneat {
+        background: rgba(35, 35, 51, 0.95);
+        border-color: var(--color-border-dark);
+    }
+
+    /* === BOTTOM NAV === */
+    .nav-link-sneat {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.125rem;
+        padding: 0.375rem 0.75rem;
+        border-radius: 0.375rem;
+        font-size: 0.7rem;
+        font-weight: 500;
+        color: var(--color-text-muted);
+        transition: all 0.2s ease;
+    }
+    .nav-link-sneat:hover { color: var(--color-primary); }
+    .nav-link-sneat.active { color: var(--color-primary); }
+
+    /* === APP BRAND (SNEAT LEAF LOGO) === */
+    .app-brand-logo svg {
+        width: 1.375rem;
+        height: 2.375rem;
+    }
+
+    /* === STAT CARD === */
+    .stat-card-sneat {
+        background: var(--color-card);
+        border-radius: 0.375rem;
+        box-shadow: 0 2px 6px 0 rgba(67, 89, 113, 0.12);
+        padding: 1.25rem 1rem;
+        transition: box-shadow 0.2s ease, transform 0.2s ease;
+    }
+    .stat-card-sneat:hover {
+        box-shadow: 0 2px 12px rgba(67, 89, 113, 0.15);
+        transform: translateY(-2px);
+    }
+    .dark .stat-card-sneat {
+        background: var(--color-card-dark);
+        box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.2);
+    }
+    .dark .stat-card-sneat:hover {
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+        transform: translateY(-2px);
+    }
+
+    /* === STAT CARD ICON GRADIENT OVERRIDES === */
+    .bg-icon-income { background: linear-gradient(135deg, #28c76f, #6ddb9a); }
+    .bg-icon-expense { background: linear-gradient(135deg, #ea5455, #f08a8b); }
+    .bg-icon-primary { background: linear-gradient(135deg, #696cff, #9b9dff); }
+    .bg-icon-warning { background: linear-gradient(135deg, #ff9f43, #ffbe76); }
+    .bg-icon-info { background: linear-gradient(135deg, #00cfe8, #5ddff0); }
+}
+
+@keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+.skeleton-shimmer {
+    background: linear-gradient(90deg, #f0f0f2 25%, #f8f8fa 50%, #f0f0f2 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 0.375rem;
+}
+.dark .skeleton-shimmer {
+    background: linear-gradient(90deg, #2b2b44 25%, #353550 50%, #2b2b44 75%);
+    background-size: 200% 100%;
+}
+
+/* === TOAST OVERRIDES === */
+.toast-sneat {
+    font-family: 'Public Sans', sans-serif !important;
+    font-size: 0.875rem !important;
+    border-radius: 0.375rem !important;
+    box-shadow: 0 2px 12px rgba(67, 89, 113, 0.15) !important;
+    padding: 0.75rem 1rem !important;
+}

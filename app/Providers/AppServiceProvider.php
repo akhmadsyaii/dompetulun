@@ -24,6 +24,10 @@ class AppServiceProvider extends ServiceProvider
                     @mkdir($dir, 0755, true);
                 }
             }
+            config([
+                'view.compiled' => storage_path('framework/views'),
+                'logging.channels.single.path' => storage_path('logs/laravel.log'),
+            ]);
         }
     }
 

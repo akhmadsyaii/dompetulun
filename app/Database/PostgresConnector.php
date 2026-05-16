@@ -10,8 +10,9 @@ class PostgresConnector extends BasePostgresConnector
     {
         $dsn = parent::getDsn($config);
 
-        if (isset($config['host'])) {
-            $parts = explode('.', $config['host']);
+        $host = $config['host'] ?? '';
+        if ($host && !str_contains($host, '-pooler')) {
+            $parts = explode('.', $host);
             $endpointId = $parts[0];
             $dsn .= ";options=endpoint={$endpointId}";
         }

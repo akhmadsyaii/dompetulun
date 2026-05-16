@@ -4,7 +4,6 @@
             "runtime": "vercel-php@0.7.0"
         }
     },
-    "buildCommand": "composer install --no-dev --optimize-autoloader --no-interaction && npm ci --no-optional && npm run build",
     "outputDirectory": "public",
     "routes": [
         {

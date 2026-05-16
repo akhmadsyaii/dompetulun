@@ -28,6 +28,10 @@ class AppServiceProvider extends ServiceProvider
                 'view.compiled' => storage_path('framework/views'),
                 'logging.channels.single.path' => storage_path('logs/laravel.log'),
             ]);
+
+            $this->app->bind('db.connector.pgsql', function () {
+                return new \App\Database\PostgresConnector;
+            });
         }
     }
 

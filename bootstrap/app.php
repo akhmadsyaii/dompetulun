@@ -28,6 +28,10 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function (\Throwable $e, \Illuminate\Http\Request $request) {
-            return response("ERROR: " . $e->getMessage() . "\nFile: " . $e->getFile() . ":" . $e->getLine() . "\nType: " . get_class($e) . "\n\n" . $e->getTraceAsString() . "\n", 500, ['Content-Type' => 'text/plain']);
+            return new \Symfony\Component\HttpFoundation\Response(
+                "ORIGINAL ERROR: " . $e->getMessage() . "\nFile: " . $e->getFile() . ":" . $e->getLine() . "\nType: " . get_class($e) . "\n\n" . $e->getTraceAsString() . "\n",
+                500,
+                ['Content-Type' => 'text/plain']
+            );
         });
     })->create();

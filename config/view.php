@@ -28,9 +28,10 @@ return [
     |
     */
 
-    'compiled' => env(
-        'VIEW_COMPILED_PATH',
-        storage_path('framework/views')
+    'compiled' => env('VIEW_COMPILED_PATH') ?: (
+        (isset($_ENV['VERCEL']) || getenv('VERCEL'))
+            ? '/tmp/storage/framework/views'
+            : storage_path('framework/views')
     ),
 
 ];

@@ -12,7 +12,12 @@ class WalletController extends Controller
 {
     public function index()
     {
-        return Inertia::render('Wallets');
+        $wallets = Wallet::where('user_id', Auth::id())->get()->map(function ($w) {
+            $w->balance = $w->balance;
+            return $w;
+        });
+
+        return Inertia::render('Wallets', ['wallets' => $wallets]);
     }
 
     public function data()

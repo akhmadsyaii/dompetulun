@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Head } from '@inertiajs/react'
 import axios from 'axios'
 import toast from 'react-hot-toast'
@@ -32,9 +32,9 @@ const typeColors = {
     other: '#00cfe8',
 }
 
-export default function Wallets() {
-    const [wallets, setWallets] = useState([])
-    const [loading, setLoading] = useState(true)
+export default function Wallets({ wallets: initialWallets }) {
+    const [wallets, setWallets] = useState(initialWallets || [])
+    const [loading, setLoading] = useState(false)
     const [modalOpen, setModalOpen] = useState(false)
     const [editing, setEditing] = useState(null)
     const [deleteTarget, setDeleteTarget] = useState(null)
@@ -42,14 +42,10 @@ export default function Wallets() {
     const [form, setForm] = useState({ name: '', type: 'cash', initial_balance: '' })
 
     const fetchData = () => {
-        setLoading(true)
         axios.get('/wallets/data')
             .then((res) => setWallets(res.data || []))
             .catch(() => toast.error('Gagal memuat dompet'))
-            .finally(() => setLoading(false))
     }
-
-    useEffect(() => { fetchData() }, [])
 
     const openCreate = () => {
         setEditing(null)

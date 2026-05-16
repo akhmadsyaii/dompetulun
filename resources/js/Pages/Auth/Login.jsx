@@ -42,6 +42,7 @@ export default function Login() {
                             onChange={(e) => setData('email', e.target.value)}
                             className="form-control-sneat"
                             placeholder="Enter your email or username"
+                            autoComplete="email"
                             autoFocus
                         />
                         <AnimatePresence>
@@ -63,6 +64,7 @@ export default function Login() {
                         <input
                             id="password"
                             type="password"
+                            autoComplete="current-password"
                             value={data.password}
                             onChange={(e) => setData('password', e.target.value)}
                             className="form-control-sneat"

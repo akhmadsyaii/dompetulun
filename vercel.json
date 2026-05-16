@@ -2,9 +2,6 @@
     "functions": {
         "api/index.php": {
             "runtime": "vercel-php@0.9.0"
-        },
-        "api/migrate.php": {
-            "runtime": "vercel-php@0.9.0"
         }
     },
     "outputDirectory": "public",
@@ -28,10 +25,6 @@
         {
             "src": "/robots.txt",
             "dest": "/robots.txt"
-        },
-        {
-            "src": "/__migrate",
-            "dest": "/api/migrate.php"
         },
         {
             "src": "/(.*)",

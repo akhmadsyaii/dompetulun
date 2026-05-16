@@ -35,7 +35,7 @@ class TransactionController extends Controller
         }
 
         return Inertia::render('Transactions', [
-            'transactions' => $query->latest()->paginate(15),
+            'transactions' => $query->with('wallet', 'labels')->latest()->paginate(15),
             'filters' => $request->only(['type', 'category', 'date_from', 'date_to', 'search']),
         ]);
     }

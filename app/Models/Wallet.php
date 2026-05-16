@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Wallet extends Model
 {
     use HasFactory;
+
+    private ?float $cachedBalance = null;
+
     protected $fillable = [
         'user_id',
         'name',
@@ -40,14 +43,11 @@ class Wallet extends Model
 
     public function getBalanceAttribute(): float
     {
-        $income = Transaction::where('wallet_id', $this->id)
-            ->where('type', 'income')
-            ->sum('amount');
-
-        $expense = Transaction::where('wallet_id', $this->id)
-            ->where('type', 'expense')
-            ->sum('amount');
-
-        return (float) ($this->initial_balance + $income - $expense);
+        if ($this->cachedBalance !== null) return $this->cachedBalance;
+        $net = Transaction::where('wallet_id', $this->id)
+            ->selectRaw("COALESCE(SUM(CASE WHEN type = 'income' THEN amount WHEN type = 'expense' THEN -amount ELSE 0 END), 0) as net")
+            ->value('net');
+        $this->cachedBalance = (float) ($this->initial_balance + $net);
+        return $this->cachedBalance;
     }
 }

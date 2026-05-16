@@ -74,43 +74,44 @@ class BudgetController extends Controller
     public function report()
     {
         $userId = Auth::id();
+        $startDate = now()->subMonths(5)->startOfMonth()->format('Y-m-d');
+        $endDate = now()->endOfMonth()->format('Y-m-d');
+
+        $budgets = Budget::where('user_id', $userId)
+            ->whereBetween('year', [now()->subMonths(5)->year, now()->year])
+            ->get();
+
+        $spentByCategory = Transaction::where('user_id', $userId)
+            ->where('type', 'expense')
+            ->whereBetween('date', [$startDate, $endDate])
+            ->get()
+            ->groupBy(fn ($t) => $t->date->format('Y-m') . '_' . $t->category)
+            ->map(fn ($group) => $group->sum('amount'));
+
         $months = [];
         for ($i = 5; $i >= 0; $i--) {
             $date = now()->subMonths($i);
-            $m = $date->month;
-            $y = $date->year;
+            $key = $date->format('Y-m');
 
-            $budgets = Budget::where('user_id', $userId)
-                ->where('year', $y)
-                ->where('month', $m)
-                ->get();
+            $monthBudgets = $budgets->filter(fn ($b) => $b->year === (int) $date->format('Y') && $b->month === (int) $date->format('n'));
+            $totalBudget = $monthBudgets->sum('amount');
 
-            $totalBudget = $budgets->sum('amount');
-            $totalSpent = Transaction::where('user_id', $userId)
-                ->where('type', 'expense')
-                ->whereYear('date', $y)
-                ->whereMonth('date', $m)
-                ->sum('amount');
-
-            $categoryData = $budgets->map(function ($b) use ($userId, $m, $y) {
-                $spent = Transaction::where('user_id', $userId)
-                    ->where('category', $b->category)
-                    ->where('type', 'expense')
-                    ->whereYear('date', $y)
-                    ->whereMonth('date', $m)
-                    ->sum('amount');
+            $totalSpent = 0;
+            $categoryData = $monthBudgets->map(function ($b) use ($spentByCategory, $key, &$totalSpent) {
+                $spent = (float) ($spentByCategory->get($key . '_' . $b->category, 0));
+                $totalSpent += $spent;
                 return [
                     'category' => $b->category,
                     'budget' => (float) $b->amount,
-                    'spent' => (float) $spent,
+                    'spent' => $spent,
                     'progress' => $b->amount > 0 ? round(($spent / $b->amount) * 100, 1) : 0,
                     'status' => $spent <= $b->amount ? 'on_track' : 'over',
                 ];
             });
 
             $months[] = [
-                'month' => $m,
-                'year' => $y,
+                'month' => (int) $date->format('n'),
+                'year' => (int) $date->format('Y'),
                 'label' => $date->locale('id')->isoFormat('MMM YYYY'),
                 'total_budget' => (float) $totalBudget,
                 'total_spent' => (float) $totalSpent,

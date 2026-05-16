@@ -136,7 +136,11 @@ class InsightController extends Controller
             }
         }
 
-        $unpaidBills = RecurringBill::where('user_id', $userId)->where('active', true)->get()->filter(fn ($b) => !$b->paid_this_month)->count();
+        $unpaidBills = RecurringBill::where('user_id', $userId)->where('active', true)
+            ->with(['payments' => fn ($q) => $q->whereMonth('paid_at', now()->month)->whereYear('paid_at', now()->year)])
+            ->get()
+            ->filter(fn ($b) => $b->payments->isEmpty())
+            ->count();
         if ($unpaidBills > 0) {
             $tips[] = ['type' => 'warning', 'icon' => 'Bell', 'title' => 'Tagihan Belum Lunas', 'message' => "Ada {$unpaidBills} tagihan yang belum dibayar bulan ini."];
         }

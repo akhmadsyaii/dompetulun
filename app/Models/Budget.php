@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Budget extends Model
 {
     use HasFactory;
+
+    private ?float $cachedSpent = null;
+
     protected $fillable = [
         'user_id',
         'category',
@@ -32,12 +35,14 @@ class Budget extends Model
 
     public function getSpentAttribute()
     {
-        return Transaction::where('user_id', $this->user_id)
+        if ($this->cachedSpent !== null) return $this->cachedSpent;
+        $this->cachedSpent = Transaction::where('user_id', $this->user_id)
             ->where('category', $this->category)
             ->where('type', 'expense')
             ->whereYear('date', $this->year)
             ->whereMonth('date', $this->month)
             ->sum('amount');
+        return $this->cachedSpent;
     }
 
     public function getRemainingAttribute()

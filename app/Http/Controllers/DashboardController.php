@@ -18,6 +18,7 @@ class DashboardController extends Controller
         $endDate = now()->endOfYear()->format('Y-m-d');
 
         $recentTransactions = Transaction::where('user_id', $user->id)
+            ->with('wallet', 'labels')
             ->orderBy('date', 'desc')
             ->orderBy('created_at', 'desc')
             ->limit(5)

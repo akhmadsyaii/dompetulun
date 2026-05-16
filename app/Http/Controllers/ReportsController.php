@@ -26,6 +26,7 @@ class ReportsController extends Controller
         $expenseByCategory = $service->getExpenseByCategory($user->id, $startDate, $endDate);
         $transactions = Transaction::where('user_id', $user->id)
             ->whereBetween('date', [$startDate, $endDate])
+            ->with('wallet', 'labels')
             ->latest()
             ->paginate(20);
 

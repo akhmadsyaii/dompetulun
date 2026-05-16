@@ -2,6 +2,9 @@
     "functions": {
         "api/index.php": {
             "runtime": "vercel-php@0.9.0"
+        },
+        "api/health.php": {
+            "runtime": "vercel-php@0.9.0"
         }
     },
     "outputDirectory": "public",
@@ -25,6 +28,10 @@
         {
             "src": "/robots.txt",
             "dest": "/robots.txt"
+        },
+        {
+            "src": "/health",
+            "dest": "/api/health.php"
         },
         {
             "src": "/(.*)",

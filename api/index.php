@@ -38,6 +38,16 @@ if (isset($_ENV['VERCEL']) || getenv('VERCEL')) {
 /** @var \Illuminate\Foundation\Application $app */
 $app = require_once __DIR__.'/../bootstrap/app.php';
 
+$migratedFlag = '/tmp/storage/framework/.migrated';
+if ((isset($_ENV['VERCEL']) || getenv('VERCEL')) && !file_exists($migratedFlag)) {
+    try {
+        $app->make(\Illuminate\Contracts\Console\Kernel::class)->call('migrate', ['--force' => true]);
+        @touch($migratedFlag);
+    } catch (\Throwable $e) {
+        // silently continue — migrations will run on next cold start
+    }
+}
+
 $kernel = $app->make(\Illuminate\Contracts\Http\Kernel::class);
 
 $request = Request::capture();

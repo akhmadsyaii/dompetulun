@@ -61,8 +61,11 @@ class DashboardController extends Controller
 
         $unpaidBills = RecurringBill::where('user_id', $user->id)
             ->where('active', true)
+            ->with(['payments' => function ($q) {
+                $q->whereMonth('paid_at', now()->month)->whereYear('paid_at', now()->year);
+            }])
             ->get()
-            ->filter(fn ($b) => !$b->paid_this_month)
+            ->filter(fn ($b) => $b->payments->isEmpty())
             ->count();
 
         $budgets = Budget::where('user_id', $user->id)

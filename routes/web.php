@@ -18,10 +18,20 @@ use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\WalletController;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return auth()->check() ? redirect('/dashboard') : redirect('/login');
+});
+
+Route::get('/health', function () {
+    try {
+        DB::select('SELECT 1');
+        return response()->json(['status' => 'ok', 'db' => 'connected']);
+    } catch (\Throwable $e) {
+        return response()->json(['status' => 'error', 'db' => $e->getMessage()], 500);
+    }
 });
 
 Route::middleware('guest')->group(function () {

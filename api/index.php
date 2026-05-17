@@ -38,6 +38,10 @@ if (isset($_ENV['VERCEL']) || getenv('VERCEL')) {
 /** @var \Illuminate\Foundation\Application $app */
 $app = require_once __DIR__.'/../bootstrap/app.php';
 
+if (isset($_ENV['VERCEL']) || getenv('VERCEL')) {
+    $app->useStoragePath('/tmp/storage');
+}
+
 $kernel = $app->make(\Illuminate\Contracts\Http\Kernel::class);
 
 $request = Request::capture();

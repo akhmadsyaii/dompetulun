@@ -6,9 +6,6 @@ use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
         if (isset($_ENV['VERCEL']) || getenv('VERCEL')) {
@@ -28,7 +25,6 @@ class AppServiceProvider extends ServiceProvider
                 'view.compiled' => storage_path('framework/views'),
                 'logging.channels.single.path' => storage_path('logs/laravel.log'),
             ]);
-
         }
 
         $this->app->bind('db.connector.pgsql', function () {
@@ -36,9 +32,6 @@ class AppServiceProvider extends ServiceProvider
         });
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
         if (isset($_ENV['VERCEL']) || getenv('VERCEL')) {
@@ -52,6 +45,25 @@ class AppServiceProvider extends ServiceProvider
                 if (!is_dir($dir)) {
                     @mkdir($dir, 0755, true);
                 }
+            }
+        }
+
+        $host = config('database.connections.pgsql.host', '');
+        if (str_contains($host, '.supabase.co')) {
+            preg_match('/db\.(.+?)\.supabase\.co/', $host, $m);
+            $ref = $m[1] ?? '';
+            $region = env('DB_SUPABASE_REGION', 'ap-southeast-1');
+
+            config([
+                'database.connections.pgsql.host' => "aws-0-{$region}.pooler.supabase.com",
+                'database.connections.pgsql.port' => '6543',
+            ]);
+
+            $username = config('database.connections.pgsql.username', '');
+            if ($ref && $username && !str_contains($username, '.')) {
+                config([
+                    'database.connections.pgsql.username' => $username . '.' . $ref,
+                ]);
             }
         }
     }

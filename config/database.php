@@ -88,7 +88,15 @@ return [
             'driver' => 'pgsql',
             'url' => env('DB_URL'),
             'host' => env('DB_HOST', '127.0.0.1'),
-            'port' => env('DB_PORT', '5432'),
+            'port' => (function () {
+                $host = env('DB_HOST', '');
+                $port = env('DB_PORT', '5432');
+                if ($host && str_contains($host, '.neon.tech')) {
+                    $endpointId = explode('.', $host)[0];
+                    return $port . ';options=endpoint%3D' . $endpointId;
+                }
+                return $port;
+            })(),
             'database' => env('DB_DATABASE', 'laravel'),
             'username' => env('DB_USERNAME', 'root'),
             'password' => env('DB_PASSWORD', ''),
@@ -97,7 +105,6 @@ return [
             'prefix_indexes' => true,
             'search_path' => 'public',
             'sslmode' => env('DB_SSLMODE', 'require'),
-            'pgsql_options' => env('DB_PGSQL_OPTIONS'),
             'options' => extension_loaded('pdo_pgsql') ? [
                 PDO::ATTR_TIMEOUT => 2,
             ] : [],

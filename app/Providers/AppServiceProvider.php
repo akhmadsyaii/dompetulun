@@ -47,17 +47,5 @@ class AppServiceProvider extends ServiceProvider
                 }
             }
         }
-
-        $host = config('database.connections.pgsql.host', '');
-        if (str_contains($host, '.supabase.co')) {
-            preg_match('/db\.(.+?)\.supabase\.co/', $host, $m);
-            $ref = $m[1] ?? '';
-            $region = env('DB_SUPABASE_REGION', 'ap-southeast-1');
-
-            config([
-                'database.connections.pgsql.host' => "aws-0-{$region}.pooler.supabase.com",
-                'database.connections.pgsql.port' => '6543',
-            ]);
-        }
     }
 }

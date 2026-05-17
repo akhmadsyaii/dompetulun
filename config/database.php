@@ -93,7 +93,7 @@ return [
                 $port = env('DB_PORT', '5432');
                 if ($host && str_contains($host, '.neon.tech')) {
                     $endpointId = explode('.', $host)[0];
-                    return $port . ';options=endpoint%3D' . $endpointId;
+                    return $port . ';options=endpoint=' . $endpointId;
                 }
                 return $port;
             })(),

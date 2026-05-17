@@ -58,13 +58,6 @@ class AppServiceProvider extends ServiceProvider
                 'database.connections.pgsql.host' => "aws-0-{$region}.pooler.supabase.com",
                 'database.connections.pgsql.port' => '6543',
             ]);
-
-            $username = config('database.connections.pgsql.username', '');
-            if ($ref && $username && !str_contains($username, '.')) {
-                config([
-                    'database.connections.pgsql.username' => $username . '.' . $ref,
-                ]);
-            }
         }
     }
 }
